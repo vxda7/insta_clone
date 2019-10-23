@@ -42,8 +42,10 @@ def hashtags(request, id):
     hashtag = get_object_or_404(HashTag, id=id)
     
     posts = hashtag.taged_post.all()
+    form = CommentForm
     context = {
-        'posts': posts
+        'posts': posts,
+        'form' : form,
     }
     return render(request, 'posts/index.html', context)
 

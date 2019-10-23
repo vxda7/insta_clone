@@ -5,6 +5,7 @@ from django.contrib.auth import logout as auth_logout
 from .forms import CostomUserCreationForm
 from .models import User
 from posts.models import Post
+from posts.forms import CommentForm
 # Create your views here.
 def signup(request):
     if request.method == "POST":
@@ -40,9 +41,11 @@ def logout(request):
 def user_page(request, id):
     user_info = get_object_or_404(User, id=id)
     posts = Post.objects.filter(user=user_info)
+    form = CommentForm
     context = {
         'user_info':user_info,
         'posts': posts,
+        'form': form,
     }
     return render(request, 'accounts/user_page.html', context)
 
