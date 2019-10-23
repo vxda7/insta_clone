@@ -8,6 +8,7 @@
     {% for info in user_info.followers.all %}
       {{info}}
     {% endfor %}
+    <p class="lead">{{user_info.username}}님이 팔로우 하는 사람</p>
     {% for info in user_info.followings.all %}
       {{info}}
     {% endfor %}

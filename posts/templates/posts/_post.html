@@ -2,7 +2,7 @@
 {% load bootstrap4 %}
 <div class="card m-3">
   <img src="{{post.image.url}}" class="card-img-top" alt="..." data-toggle="modal" data-target="#{{post.id}}">
-  <div class="card-body">
+  <!-- <div class="card-body">
     <h5 class="card-title"></h5>
     <p class="card-text">{{post|hashtag_link|safe}}</p>
     <a href="{% url 'posts:like' post.id %}" class="d-inline-flex btn btn-outline-danger py-0 px-2 m-0 align-items-top">
@@ -13,7 +13,7 @@
       {% endif %}
     </a>
     <h6 class="d-inline-flex">{{post.likes_users.count}}명이 이 사진을 좋아합니다.</h6>
-  </div>
+  </div> -->
 </div>
 
 
