@@ -1,0 +1,53 @@
+{% load make_link %}
+<div class="card m-3">
+  <img src="{{post.image.url}}" class="card-img-top" alt="..." data-toggle="modal" data-target="#{{post.id}}">
+  <div class="card-body">
+    <h5 class="card-title"></h5>
+    <p class="card-text">{{post|hashtag_link|safe}}</p>
+    <a href="{% url 'posts:like' post.id %}" class="d-inline-flex btn btn-outline-danger py-0 px-2 m-0 align-items-top">
+      {% if user in post.likes_users.all %}
+        <h2 class="m-0">♥</h2>
+      {% else %}
+        <h2 class="m-0">♡</h2>
+      {% endif %}
+    </a>
+    <h6 class="d-inline-flex">{{post.likes_users.count}}명이 이 사진을 좋아합니다.</h6>
+  </div>
+</div>
+
+
+  <div class="modal fade" id="{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <img src="{{post.image.url}}" class="card-img-top" alt="...">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            <p class="card-text">{{post|hashtag_link|safe}}</p>
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <a href="{% url 'posts:like' post.id %}" class="d-inline-flex btn btn-outline-danger py-0 px-2 m-0 align-items-top">
+            {% if user in post.likes_users.all %}
+              <h2 class="m-0">♥</h2>
+            {% else %}
+              <h2 class="m-0">♡</h2>
+            {% endif %}
+          </a>
+          <h6 class="d-inline-flex">{{post.likes_users.count}}명이 이 사진을 좋아합니다.</h6>
+        </div>
+        <span class="modal-footer">
+          <a href="{% url 'accounts:user_page' post.user.id %}">
+            {{post.user.username}}
+          </a>
+          <a href="{% url 'posts:follow' post.user.id %}">
+            팔로우
+          </a>
+          ({{post.user.followers.all.count}})
+        </span>
+          <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+      </div>
+    </div>
+  </div>

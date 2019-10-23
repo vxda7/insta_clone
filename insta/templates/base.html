@@ -1,20 +1,44 @@
+{% load bootstrap4 %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>Instagram</title>
+  <link href="https://fonts.googleapis.com/css?family=Jua&display=swap" rel="stylesheet">
+  {% bootstrap_css %}
+  <style>
+    span {
+      font-family: 'Jua', sans-serif;
+    }
+  </style>
 </head>
 <body>
-  {% if user.is_authenticated %}
-    <p>{{ user.username }}</p>
-    <a href="{% url 'accounts:logout' %}">로그아웃</a>
-  {% else %}
-    <a href="{% url 'accounts:signup' %}">회원가입</a>
-    <a href="{% url 'accounts:login' %}">로그인</a>
-  {% endif %}
-  {% block body %}
-  {% endblock %}
+  <nav class="navbar navbar-light bg-light">
+    <a class="navbar-brand" href="{% url 'posts:index' %}">Instagram</a>
+    <form class="form-inline">
+      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+    {% if user.is_authenticated %}
+      <div>
+        <a href="{% url 'accounts:user_page' user.id %}">{{ user.username }}</a>
+        <a href="{% url 'accounts:logout' %}">로그아웃</a>
+        <a href="{% url 'posts:create' %}">글쓰기</a>
+      </div>
+    {% else %}
+      <div>
+        <a href="{% url 'accounts:signup' %}">회원가입</a>
+        <a href="{% url 'accounts:login' %}">로그인</a>
+      </div>
+    {% endif %}
+  </nav>
+
+  <div class="container">
+    {% block body %}
+    {% endblock %}
+  </div>
+  {% bootstrap_javascript jquery='full' %}
 </body>
 </html>
