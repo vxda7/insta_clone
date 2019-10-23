@@ -1,14 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import PostForm
-from .models import Post, HashTag
+from .forms import PostForm, CommentForm
+from .models import Post, HashTag, Comment
 from django.contrib.auth.views import login_required
 from accounts.models import User
 
 # Create your views here.
 def index(request):
     posts = Post.objects.all()
+    comments = Comment.objects.all()
+    form = CommentForm
     context = {
-        'posts':posts
+        'posts': posts,
+        'comments': comments,
+        'form': form,
     }
     return render(request, 'posts/index.html', context)
 
@@ -56,11 +60,6 @@ def like(request, id):
     return redirect('posts:index')
 
 
-# def create_comment(request, id):
-#     post = get_object_or_404(Post, id=id)
-#     if request.method == "POST":
-#         form = 
-
 
 def follow(request, id):
     you = get_object_or_404(User, id=id)
@@ -73,4 +72,23 @@ def follow(request, id):
         else:
             you.followers.add(me)
 
+    return redirect("posts:index")
+
+
+    
+def create_comment(request, id):
+    post = get_object_or_404(Post, id=id)
+    if request.method == "POST":
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.post = post
+            comment.user = request.user
+            comment.save()
+    return redirect("posts:index")
+
+
+def delete_comment(request, id):
+    comment = get_object_or_404(Comment, id=id)
+    comment.delete()
     return redirect("posts:index")

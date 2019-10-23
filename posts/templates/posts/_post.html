@@ -1,4 +1,5 @@
 {% load make_link %}
+{% load bootstrap4 %}
 <div class="card m-3">
   <img src="{{post.image.url}}" class="card-img-top" alt="..." data-toggle="modal" data-target="#{{post.id}}">
   <div class="card-body">
@@ -48,6 +49,26 @@
           ({{post.user.followers.all.count}})
         </span>
           <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+        <hr>
+
+        <form action="{% url 'posts:create_comment' post.id %}" method="POST" class="m-2">
+          {% csrf_token %}
+          {% bootstrap_form form %}
+          <input type="submit" value="작성" class="btn btn-secondary float-right">
+        </form>
+        <table class="table">
+          <tbody>
+          {% for comment in post.comment_set.all %}
+            <tr>
+              <td scope="row" class="pr-1">{{comment.user}}</td>
+              <td scope="row" class="pr-0" colspan="2">{{comment.content}}</td>
+              <td class="text-right pl-0">
+                <a href="{% url 'posts:delete_comment' comment.id %}" class="">x</a>
+              </td>
+            </tr>
+          {% endfor %}   
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

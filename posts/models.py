@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
+from accounts.models import User
 
 # Create your models here.
 class HashTag(models.Model):
@@ -22,3 +23,7 @@ class Post(models.Model):
     hashtags = models.ManyToManyField(HashTag, related_name="taged_post")
 
 
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    content = models.CharField(max_length=100)
