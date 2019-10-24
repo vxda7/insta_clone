@@ -17,6 +17,7 @@
 </div>
 
 
+<!-- 포스트모달 -->
   <div class="modal fade" id="{{post.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -29,15 +30,24 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          <a href="{% url 'posts:like' post.id %}" class="d-inline-flex btn btn-outline-danger py-0 px-2 m-0 align-items-top">
-            {% if user in post.likes_users.all %}
-              <h2 class="m-0">♥</h2>
-            {% else %}
-              <h2 class="m-0">♡</h2>
+        <div class="modal-body d-flex justify-content-between">
+          <div>
+            <a href="{% url 'posts:like' post.id %}" class="d-inline-flex btn btn-outline-danger py-0 px-2 m-0 align-items-top">
+              {% if user in post.likes_users.all %}
+                <h2 class="m-0">♥</h2>
+              {% else %}
+                <h2 class="m-0">♡</h2>
+              {% endif %}
+            </a>
+            <h6 class="d-inline-flex">{{post.likes_users.count}}명이 이 사진을 좋아합니다.</h6>
+          </div>
+          <div>
+            {% if user == post.user %}
+              <a href="{% url 'posts:update' post.id %}" class="btn btn-outline-warning btn-sm">🖊️</a>
+              <a href="{% url 'posts:delete' post.id %}" class="btn btn-outline-danger btn-sm ">❌</a>
             {% endif %}
-          </a>
-          <h6 class="d-inline-flex">{{post.likes_users.count}}명이 이 사진을 좋아합니다.</h6>
+          </div>
+
         </div>
         <span class="modal-footer">
           <a href="{% url 'accounts:user_page' post.user.id %}">
@@ -48,7 +58,6 @@
           </a>
           ({{post.user.followers.all.count}})
         </span>
-          <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
         <hr>
 
         <form action="{% url 'posts:create_comment' post.id %}" method="POST" class="m-2">

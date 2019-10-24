@@ -4,6 +4,9 @@
   <div class="jumbotron mt-4">
     <h1 class="display-4">{{user_info.username}}</h1>
     <h1>님의 유저페이지입니다.</h1>
+    <span>{{user_info.last_name}}</span> <span>{{user_info.first_name}}</span> <p></p>
+    <span>{{user_info.email}}</span>
+    <hr>
     <p class="lead">{{user_info.username}}님을 팔로우 하는 사람</p>
     {% for info in user_info.followers.all %}
       {{info}}
@@ -17,6 +20,14 @@
     <p>팔로잉 : {{user_info.followings.all|length}}</p>
     {% if user.is_authenticated and user != user_info %}
       <a class="btn btn-primary btn-lg" href="{% url 'accounts:follow' user_info.id %}" role="button">팔로우</a>
+    {% else %}
+      <!-- <a class="btn btn-primary btn-lg" href="{% url 'accounts:delete' user_info.id %}" role="button">회원탈퇴</a> -->
+      <form action="{% url 'accounts:delete' user_info.id %}" method="post">
+        {% csrf_token %}
+        <input type="submit" value="탈퇴" class="btn btn-primary btn-lg">
+      </form>
+      <a class="btn btn-primary btn-lg" href="{% url 'accounts:update' %}" role="button">정보수정</a>
+      <a class="btn btn-primary btn-lg" href="{% url 'accounts:password' %}" role="button">비밀번호변경</a>
     {% endif%}
   </div>
 

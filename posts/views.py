@@ -3,10 +3,16 @@ from .forms import PostForm, CommentForm
 from .models import Post, HashTag, Comment
 from django.contrib.auth.views import login_required
 from accounts.models import User
+from django.db.models import Q
+from django.core.paginator import Paginator
 
 # Create your views here.
 def index(request):
     posts = Post.objects.all()
+    paginator = Paginator(posts, 9)
+    page = request.GET.get('page')
+    posts = paginator.get_page(page)
+
     comments = Comment.objects.all()
     form = CommentForm
     context = {
@@ -42,6 +48,11 @@ def hashtags(request, id):
     hashtag = get_object_or_404(HashTag, id=id)
     
     posts = hashtag.taged_post.all()
+
+    paginator = Paginator(posts, 9)
+    page = request.GET.get('page')
+    posts = paginator.get_page(page)
+
     form = CommentForm
     context = {
         'posts': posts,
@@ -94,3 +105,50 @@ def delete_comment(request, id):
     comment = get_object_or_404(Comment, id=id)
     comment.delete()
     return redirect("posts:index")
+
+
+def search(request):
+    word = request.GET.get('word')
+    posts = Post.objects.filter(Q(content__icontains=word))
+
+    paginator = Paginator(posts, 9)
+    page = request.GET.get('page')
+    posts = paginator.get_page(page)
+
+    form = CommentForm
+    comments = Comment.objects.all()
+    context = {
+        'posts': posts,
+        'form' : form,
+        'comments': comments,
+    }
+    return render(request, 'posts/index.html', context)
+
+
+def delete(request, id):
+    post = get_object_or_404(Post, id=id)
+    post.delete()
+    return redirect("posts:index")
+
+
+def update(request, id):
+    post = get_object_or_404(Post, id=id)
+    if request.method == "POST":
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            post = form.save()
+            post.hashtags.clear()
+            for word in post.content.split():
+                if word.startswith('#'):
+                    # hashtag 추가
+                    hashtag = HashTag.objects.get_or_create(content=word)[0] # (obj, True or False)
+                    post.hashtags.add(hashtag)
+            return redirect('posts:index')
+    else:
+        form = PostForm(instance=post)
+    context = {
+        'form': form
+    }
+    return render(request, 'posts/form.html', context)
+    
+    

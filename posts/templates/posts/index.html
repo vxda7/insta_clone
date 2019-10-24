@@ -1,10 +1,13 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
+{% load bootstrap_pagination %}
 {% block body %}
-  <h1>Index</h1>
   <div class="row">
   {% for post in posts %}
+    <div class="col-lg-4 col-6">
     {% include 'posts/_post.html' %}
+    </div>
   {% endfor %}
   </div>
+  {% bootstrap_paginate posts %}
 {% endblock %}
