@@ -150,3 +150,7 @@ AUTHENTICATION_BACKENDS = (
 )
 
 # LOGIN_REDIRECT_URL = "posts:index"
+
+
+import django_heroku
+django_heroku.settings(locals())
